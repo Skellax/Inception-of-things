@@ -1,0 +1,7 @@
+write-kubeconfig-mode: "0644"
+bind-address: "192.168.56.110"
+advertise-address: "192.168.56.110"
+node-ip: "192.168.56.110"
+disable:
+  - traefik
+  - servicelb

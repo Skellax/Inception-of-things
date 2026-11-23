@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wil-playground
+  namespace: argo-cd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Skellax/Iot-mfuhrman.git
+    targetRevision: main
+    path: manifest
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

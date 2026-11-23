@@ -1,0 +1,24 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/bookworm64"
+  config.vm.box_url = "https://vagrantcloud.com/debian/bookworm64"
+    config.vm.define "mfuhrmanS", primary: true do  |control|
+      control.vm.hostname = "mfuhrmanS"
+      control.vm.network "private_network", ip: "192.168.56.110"
+        control.vm.provider "virtualbox" do |vb|
+          vb.memory = "1024"
+          vb.cpus = 1
+          vb.name = "mfuhrmanS"
+        end
+      control.vm.provision "shell", privileged: true, path: "scripts/controller.sh"
+    end
+    config.vm.define "mfuhrmanSW" do |control|
+      control.vm.hostname = "mfuhrmanSW"
+      control.vm.network "private_network", ip: "192.168.56.111"
+        control.vm.provider "virtualbox" do |vb|
+          vb.memory = "1024"
+          vb.cpus = 1
+          vb.name = "mfuhrmanSW"
+        end
+      control.vm.provision "shell", privileged: true, path: "scripts/agent.sh"
+    end
+end
