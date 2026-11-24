@@ -46,6 +46,14 @@ kubectl apply -f "${APP_MANIFEST}"
 
 echo "==> Mot de passe initial ArgoCD (utilisateur : admin) :"
 kubectl get secret argocd-initial-admin-secret -n argo-cd -o jsonpath="{.data.password}" | base64 -d
+
+echo "==> Configuration du lien de communication entre kubectl et le cluster k3d"
+mkdir -p ~/.kube
+k3d kubeconfig get iot > ~/.kube/config
+chmod 600 ~/.kube/config
+kubectl config current-context 
+kubectl cluster-info
+kubectl get nodes -o wide
 echo ""
 
 echo "==> Déploiement terminé avec succès !"
