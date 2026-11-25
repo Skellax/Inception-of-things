@@ -24,36 +24,28 @@ else
     echo "Cluster iot déjà présent"
 fi
 
-echo "==> Création des namespaces argo-cd et dev"
-kubectl get namespace argo-cd >/dev/null 2>&1 || kubectl create namespace argo-cd
+echo "==> Création des namespaces argocd et dev"
+kubectl get namespace argocd >/dev/null 2>&1 || kubectl create namespace argocd
 kubectl get namespace dev >/dev/null 2>&1 || kubectl create namespace dev
 
 echo "==> Installation d'ArgoCD"
-if kubectl get deployment argocd-server -n argo-cd >/dev/null 2>&1; then
+if kubectl get deployment argocd-server -n argocd >/dev/null 2>&1; then
     echo "ArgoCD déjà installé, étape d'installation ignorée"
 else
-    kubectl create -n argo-cd -f "${ARGO_INSTALL_URL}" >/tmp/argocd-install.log
+    kubectl create -n argocd -f "${ARGO_INSTALL_URL}" >/tmp/argocd-install.log
     echo "Manifeste ArgoCD créé (log: /tmp/argocd-install.log)"
 fi
 
 echo "==> Attente du démarrage d'ArgoCD (peut prendre plusieurs minutes)..."
-kubectl rollout status deployment/argocd-server -n argo-cd --timeout=600s
-kubectl rollout status deployment/argocd-repo-server -n argo-cd --timeout=600s
-kubectl rollout status statefulset/argocd-application-controller -n argo-cd --timeout=600s
+kubectl rollout status deployment/argocd-server -n argocd --timeout=600s
+kubectl rollout status deployment/argocd-repo-server -n argocd --timeout=600s
+kubectl rollout status statefulset/argocd-application-controller -n argocd --timeout=600s
 
 echo "==> Configuration de l'application ArgoCD"
 kubectl apply -f "${APP_MANIFEST}"
 
 echo "==> Mot de passe initial ArgoCD (utilisateur : admin) :"
-kubectl get secret argocd-initial-admin-secret -n argo-cd -o jsonpath="{.data.password}" | base64 -d
-
-echo "==> Configuration du lien de communication entre kubectl et le cluster k3d"
-mkdir -p ~/.kube
-k3d kubeconfig get iot > ~/.kube/config
-chmod 600 ~/.kube/config
-kubectl config current-context 
-kubectl cluster-info
-kubectl get nodes -o wide
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
 echo ""
 
 echo "==> Déploiement terminé avec succès !"
