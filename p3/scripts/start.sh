@@ -49,3 +49,8 @@ kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.pas
 echo ""
 
 echo "==> Déploiement terminé avec succès !"
+echo ""
+
+echo "==> Port forwarding !"
+
+kubectl port-forward svc/argocd-server -n argocd 8080:443
