@@ -8,13 +8,8 @@ start:
 	@sudo -A bash ./scripts/start.sh
 
 clean:
-<<<<<<< HEAD
-	@sudo -A ./scripts/clean.sh
-=======
 	@sudo -A bash ./scripts/clean.sh
-	@sudo -A bash ./scripts/uninstall.sh
->>>>>>> origin/fabio
-
+	
 uninstall:
 	@sudo -A bash ./scripts/uninstall.sh
 

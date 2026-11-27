@@ -13,8 +13,5 @@ if command -v k3d >/dev/null 2>&1; then
     fi
 fi
 
-echo "==> Suppression des namespaces ArgoCD et dev"
-kubectl delete namespace argo-cd dev --ignore-not-found
-
 
 echo "==> Nettoyage terminé."
