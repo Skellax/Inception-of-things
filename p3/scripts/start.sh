@@ -26,31 +26,28 @@ else
     echo "Cluster iot déjà présent"
 fi
 
-echo "==> Attente de la disponibilité de l'API Kubernetes..."
-k3d kubeconfig merge iot --kubeconfig-switch-context >/dev/null
-
-echo "==> Attente de l'API Kubernetes..."
-kubectl wait --for=condition=Ready node --all --timeout=180s >/dev/null
-
-echo "==> Création des namespaces ${ARGO_NS} et dev"
-kubectl get namespace "${ARGO_NS}" >/dev/null 2>&1 || kubectl create namespace "${ARGO_NS}"
+echo "==> Création des namespaces argo-cd et dev"
+kubectl get namespace argo-cd >/dev/null 2>&1 || kubectl create namespace argo-cd
 kubectl get namespace dev >/dev/null 2>&1 || kubectl create namespace dev
 
 echo "==> Installation d'ArgoCD"
-if kubectl get deployment argocd-server -n "${ARGO_NS}" >/dev/null 2>&1; then
+if kubectl get deployment argocd-server -n argo-cd >/dev/null 2>&1; then
     echo "ArgoCD déjà installé, étape d'installation ignorée"
 else
-    kubectl create -n "${ARGO_NS}" -f "${ARGO_INSTALL_URL}" >/tmp/argocd-install.log
+    kubectl create -n argo-cd -f "${ARGO_INSTALL_URL}" >/tmp/argocd-install.log
+    echo "Manifeste ArgoCD créé (log: /tmp/argocd-install.log)"
 fi
 
 echo "==> Attente du démarrage d'ArgoCD (peut prendre plusieurs minutes)..."
-kubectl rollout status deployment/argocd-server -n "${ARGO_NS}" --timeout=600s
+kubectl rollout status deployment/argocd-server -n argo-cd --timeout=600s
+kubectl rollout status deployment/argocd-repo-server -n argo-cd --timeout=600s
+kubectl rollout status statefulset/argocd-application-controller -n argo-cd --timeout=600s
 
 echo "==> Configuration de l'application ArgoCD"
 kubectl apply -n "${ARGO_NS}" -f "${APP_MANIFEST}"
 
 echo "==> Mot de passe initial ArgoCD (utilisateur : admin) :"
-kubectl get secret argocd-initial-admin-secret -n "${ARGO_NS}" -o jsonpath="{.data.password}" | base64 -d
+kubectl get secret argocd-initial-admin-secret -n argo-cd -o jsonpath="{.data.password}" | base64 -d
 echo ""
 
 echo "==> Déploiement terminé avec succès !"

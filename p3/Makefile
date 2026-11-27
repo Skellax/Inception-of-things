@@ -2,16 +2,21 @@
 all: install start
 
 install:
-	@sudo -A ./scripts/install.sh
+	@sudo -A bash ./scripts/install.sh
 
 start:
-	@sudo -A ./scripts/start.sh
+	@sudo -A bash ./scripts/start.sh
 
 clean:
+<<<<<<< HEAD
 	@sudo -A ./scripts/clean.sh
+=======
+	@sudo -A bash ./scripts/clean.sh
+	@sudo -A bash ./scripts/uninstall.sh
+>>>>>>> origin/fabio
 
 uninstall:
-	@sudo -A ./scripts/uninstall.sh
+	@sudo -A bash ./scripts/uninstall.sh
 
 
 help:
