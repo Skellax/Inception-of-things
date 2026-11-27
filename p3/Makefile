@@ -9,7 +9,6 @@ start:
 
 clean:
 	@sudo -A ./scripts/clean.sh
-	@sudo -A ./scripts/uninstall.sh
 
 uninstall:
 	@sudo -A ./scripts/uninstall.sh

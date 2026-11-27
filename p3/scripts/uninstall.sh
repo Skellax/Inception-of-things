@@ -38,4 +38,3 @@ else
 fi
 
 echo "==> Désinstallation terminée"
-echo "Déconnecte-toi puis reconnecte-toi si l'utilisateur appartenait au groupe docker."
